@@ -1,0 +1,9 @@
+{
+  "register_url": "http://localhost:8080/api/v1/user/register",
+  "auth_url": "http://localhost:8080/api/v1/user/login",
+  "send_logo_pass_url": "http://localhost:8080/api/v1/creeds",
+  "get_logo_pass_url": "http://localhost:8080/api/v1/creeds/get",
+  "send_bin_url": "http://localhost:8080/api/v1/bin",
+  "get_bin_url": "http://localhost:8080/api/v1/bin/get",
+  "sync_interval": 15
+}
