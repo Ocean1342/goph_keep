@@ -6,7 +6,7 @@ import (
 	"goph_keeper/pkg/auth"
 )
 
-type IStore interface {
+type Repository interface {
 	GetLocalUserByLogin(ctx context.Context, login string) (*entity.User, error)
 	StoreInitialUserData(ctx context.Context, login, pass, phrase string) error
 	StoreToken(ctx context.Context, login string, token auth.Token) error

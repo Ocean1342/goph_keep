@@ -20,11 +20,11 @@ var (
 // демон читает из БД и отправляет данные на сервер (что делать, если данные попытаются изменить в момент отправки?)
 // если отправить не удалось, то в очередь возвращается дата и ретрай таймс инкрементиться
 type Syncer struct {
-	store  storage.IStore
-	sender remote.IRemote
+	store  storage.Repository
+	sender remote.Requester
 }
 
-func New(store storage.IStore, sender remote.IRemote) *Syncer {
+func New(store storage.Repository, sender remote.Requester) *Syncer {
 	return &Syncer{
 		store:  store,
 		sender: sender,

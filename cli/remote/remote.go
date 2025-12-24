@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	ErrSendData    = errors.New("failed to send data")
 	ErrInvalidData = errors.New("invalid data")
 )
 
@@ -27,8 +26,8 @@ type GetLogoPassResponse struct {
 	Meta      string `json:"meta"`
 }
 
-// IRemote - сервис отвечает за отправку и получение данных на удалённый сервер
-type IRemote interface {
+// Requester - сервис отвечает за отправку и получение данных на удалённый сервер
+type Requester interface {
 	Register(ctx context.Context, login, pass, phrase string) (auth.Token, error)
 	Auth(ctx context.Context, login, pass string) (auth.Token, error)
 	//logopass
@@ -44,7 +43,7 @@ type Sender struct {
 	config     *config.Config
 }
 
-func New(clientHTTP *resty.Client, cfg *config.Config) (IRemote, error) {
+func New(clientHTTP *resty.Client, cfg *config.Config) (Requester, error) {
 	return &Sender{
 		clientHTTP: clientHTTP,
 		config:     cfg,

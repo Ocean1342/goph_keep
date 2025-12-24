@@ -14,66 +14,59 @@ import (
 	"goph_keeper/cli/storage"
 	"goph_keeper/cli/syncer"
 	"os"
-	"sync"
 	"time"
 )
 
 type Application struct {
 	Auth    *auth.Auth
 	Crypter *crypter.Crypter
-	Storage storage.IStore
+	Storage storage.Repository
 	Syncer  *syncer.Syncer
 	Printer *printer.Printer
-	Remote  remote.IRemote
+	Remote  remote.Requester
 	cancel  context.CancelFunc
 }
 
 var (
 	App        Application
-	once       sync.Once
 	ConfigData []byte
 )
 
-func Init(cmd *cobra.Command, args []string) error {
-	var err error
-	once.Do(func() {
-		log.SetOutput(os.Stdout)
-		log.SetLevel(log.DebugLevel)
-		cfg, errIn := config.New(ConfigData)
-		if errIn != nil {
-			err = errIn
-			return
-		}
-		ctx, cancel := context.WithCancel(context.Background())
-		client := resty.New()
-		crypt, _ := crypter.New()
-		repository, inErr := storage.New()
-		remoteService, _ := remote.New(client, cfg)
-		authService, _ := auth.New(repository, remoteService)
-		printerService := printer.New(cmd)
-		if inErr != nil {
-			err = inErr
-		}
-		syncerService := syncer.New(repository, remoteService)
-		//TODO: как вариант добавить флаг конторля запуска синхронизации
-		go syncerService.Sync(ctx, time.Duration(cfg.SyncInterval)*time.Second)
-		App = Application{
-			Auth:    authService,
-			Crypter: crypt,
-			Storage: repository,
-			Syncer:  syncerService,
-			Printer: printerService,
-			Remote:  remoteService,
-			cancel:  cancel,
-		}
-	})
+func Init(cmd *cobra.Command, _ []string) error {
+	log.SetOutput(os.Stdout)
+	log.SetLevel(log.DebugLevel)
+	cfg, err := config.New(ConfigData)
+	if err != nil {
+		return err
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	client := resty.New()
+	crypt, _ := crypter.New()
+	repository, inErr := storage.New()
+	remoteService, _ := remote.New(client, cfg)
+	authService, _ := auth.New(repository, remoteService)
+	printerService := printer.New(cmd)
+	if inErr != nil {
+		err = inErr
+	}
+	syncerService := syncer.New(repository, remoteService)
+	go syncerService.Sync(ctx, time.Duration(cfg.SyncInterval)*time.Second)
+	App = Application{
+		Auth:    authService,
+		Crypter: crypt,
+		Storage: repository,
+		Syncer:  syncerService,
+		Printer: printerService,
+		Remote:  remoteService,
+		cancel:  cancel,
+	}
 	if err != nil {
 		return fmt.Errorf("init application failed. err: %v", err)
 	}
 	return nil
 }
 
-func ShutDown(cmd *cobra.Command, args []string) {
+func ShutDown(cmd *cobra.Command, _ []string) {
 	App.Printer.Println("Stopping all jobs... 3.2.1. Bye")
 	time.Sleep(5 * time.Second)
 	App.cancel()

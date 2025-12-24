@@ -19,11 +19,11 @@ var (
 //	является логической прокладкой для инкапсуляции запросов к серверу
 //	и поведения если сервер недоступен
 type Auth struct {
-	store  storage.IStore
-	sender remote.IRemote
+	store  storage.Repository
+	sender remote.Requester
 }
 
-func New(store storage.IStore, sender remote.IRemote) (*Auth, error) {
+func New(store storage.Repository, sender remote.Requester) (*Auth, error) {
 	return &Auth{store: store, sender: sender}, nil
 }
 

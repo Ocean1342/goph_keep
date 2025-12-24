@@ -5,7 +5,7 @@ import (
 	"goph_keeper/cli/remote"
 )
 
-type ICase interface {
+type Action interface {
 	StoreLogoPass(ctx context.Context, req remote.StoreLogoPassRequest) error
 	GetLogoPass(ctx context.Context, req remote.GetLogoPassRequest) (*remote.GetLogoPassResponse, error)
 	SendBinData(ctx context.Context, req remote.StoreBin) error
@@ -15,6 +15,6 @@ type ICase interface {
 type Case struct {
 }
 
-func New() ICase {
+func New() Action {
 	return &Case{}
 }

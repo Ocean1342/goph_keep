@@ -13,8 +13,8 @@ import (
 
 func TestAuth_Register(t *testing.T) {
 	type fields struct {
-		store  storage.IStore
-		sender remote.IRemote
+		store  storage.Repository
+		sender remote.Requester
 	}
 	type args struct {
 		ctx    context.Context
@@ -39,7 +39,7 @@ func TestAuth_Register(t *testing.T) {
 		{
 			name: "positive case",
 			fields: fields{
-				store: func() storage.IStore {
+				store: func() storage.Repository {
 					ctrl := gomock.NewController(t)
 					m := mocks.NewMockIStore(ctrl)
 					m.EXPECT().
@@ -49,7 +49,7 @@ func TestAuth_Register(t *testing.T) {
 						StoreToken(ctx, "test", token).Return(nil)
 					return m
 				}(),
-				sender: func() remote.IRemote {
+				sender: func() remote.Requester {
 					ctrl := gomock.NewController(t)
 					m := mocks.NewMockIRemote(ctrl)
 					m.EXPECT().
