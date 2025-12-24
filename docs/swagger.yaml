@@ -1,0 +1,148 @@
+definitions:
+  api.UserAuthRequest:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  api.UserRegisterRequest:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+      phrase:
+        type: string
+    type: object
+  remote.StoreBin:
+    properties:
+      bin_data:
+        type: string
+      bin_data_path:
+        type: string
+      data_meta:
+        type: string
+      data_name:
+        type: string
+      token:
+        type: string
+      user_login:
+        type: string
+    type: object
+  remote.StoreLogoPassRequest:
+    properties:
+      data_login:
+        type: string
+      data_meta:
+        type: string
+      data_name:
+        type: string
+      data_pass:
+        type: string
+      token:
+        type: string
+      user_login:
+        type: string
+    type: object
+  storage.LogoPass:
+    properties:
+      meta:
+        type: string
+      user_login:
+        type: string
+      user_pass:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Это минимальный пример API с Swagger
+  title: Goph_Keeper Server
+  version: "1.0"
+paths:
+  /api/v1/creeds:
+    post:
+      consumes:
+      - application/json
+      description: Сохранить креды
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/remote.StoreLogoPassRequest'
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: Internal Server Error
+      summary: Сохранить креды
+      tags:
+      - register
+  /api/v1/creeds/get:
+    post:
+      consumes:
+      - application/json
+      description: Получить креды
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/remote.StoreLogoPassRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/storage.LogoPass'
+        "500":
+          description: Internal Server Error
+      summary: Получить креды
+      tags:
+      - register
+  /api/v1/user/login:
+    post:
+      consumes:
+      - application/json
+      description: Авторизация пользователя
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.UserAuthRequest'
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: Internal Server Error
+      summary: Авторизация пользователя
+      tags:
+      - register
+  /api/v1/user/register:
+    post:
+      consumes:
+      - application/json
+      description: Зарегистрировать пользователя
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.UserRegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: Internal Server Error
+      summary: Зарегистрировать пользователя
+      tags:
+      - register
+swagger: "2.0"

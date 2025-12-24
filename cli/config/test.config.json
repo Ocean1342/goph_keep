@@ -1,0 +1,5 @@
+{
+  "register_url": "register_url",
+  "auth_url": "auth_url",
+  "send_logo_pass_url": "send_logo_pass_url"
+}

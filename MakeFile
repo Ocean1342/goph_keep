@@ -1,0 +1,2 @@
+gen_doc:
+	swag init -d ./server/cmd/ -o ./docs --ot yaml
